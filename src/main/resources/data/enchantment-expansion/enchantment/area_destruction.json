@@ -1,0 +1,20 @@
+{
+  "anvil_cost": 7,
+  "description": {
+    "translate": "enchantment.enchantment-expansion.area_destruction"
+  },
+  "max_cost": {
+    "base": 68,
+    "per_level_above_first": 5
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 5
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:enchantable/mining_loot",
+  "weight": 5
+}

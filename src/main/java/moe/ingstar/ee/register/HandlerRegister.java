@@ -1,11 +1,13 @@
 package moe.ingstar.ee.register;
 
-import moe.ingstar.ee.util.handler.enchantment.HealthBoostArmorHandler;
-import moe.ingstar.ee.util.handler.enchantment.LeechHandler;
+import moe.ingstar.ee.util.handler.enchantment.AreaDestruction;
+import moe.ingstar.ee.util.handler.enchantment.HealthBoostArmor;
+import moe.ingstar.ee.util.handler.enchantment.Leech;
 
 public class HandlerRegister {
     public static void register() {
-        LeechHandler.load();
-        HealthBoostArmorHandler.load();
+        Leech.load();
+        HealthBoostArmor.load();
+        AreaDestruction.load();
     }
 }

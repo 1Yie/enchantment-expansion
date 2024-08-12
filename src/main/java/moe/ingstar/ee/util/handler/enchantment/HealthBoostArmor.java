@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.Objects;
 
-public class HealthBoostArmorHandler {
+public class HealthBoostArmor {
     public static void load() {
         ServerEntityEvents.EQUIPMENT_CHANGE.register((livingEntity, equipmentSlot, previousStack, currentStack) -> {
             if (livingEntity instanceof PlayerEntity player) {

@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ActionResult;
 
-public class LeechHandler {
+public class Leech {
 
     public static void load() {
         AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {

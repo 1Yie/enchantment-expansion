@@ -2,7 +2,6 @@ package moe.ingstar.ee;
 
 
 import moe.ingstar.ee.register.HandlerRegister;
-import moe.ingstar.ee.util.handler.enchantment.HealthBoostArmorHandler;
 import net.fabricmc.api.ModInitializer;
 
 
