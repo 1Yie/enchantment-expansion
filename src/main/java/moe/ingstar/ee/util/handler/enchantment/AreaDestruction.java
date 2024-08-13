@@ -10,12 +10,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import javax.swing.plaf.nimbus.State;
 
 public class AreaDestruction {
 
 
+
     public static void load() {
+
+
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             String enchantmentsString = player.getMainHandStack().getEnchantments().toString();
             EnchantmentParser parser = new EnchantmentParser(enchantmentsString);
@@ -24,13 +26,20 @@ public class AreaDestruction {
             if (parser.hasEnchantment("enchantment-expansion:area_destruction")) {
                 if (player.getPitch() >= -90 && player.getPitch() < -40) {
                     BreakTopOrDownBlocks(world, player, pos, playerFacing, state);
-                } else if (player.getPitch() > 20) {
-                    BreakTopOrDownBlocks(world, player, pos, playerFacing, state);
-                } else if (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH || playerFacing == Direction.WEST || playerFacing == Direction.EAST) {
-                    BreakFaceBlocks(world, player, pos, playerFacing, state);
-                } else {
-                    BreakFaceBlocks(world, player, pos, playerFacing, state);
+                    return;
                 }
+
+                if (player.getPitch() > 20) {
+                    BreakTopOrDownBlocks(world, player, pos, playerFacing, state);
+                    return;
+                }
+
+                if (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH || playerFacing == Direction.WEST || playerFacing == Direction.EAST) {
+                    BreakFaceBlocks(world, player, pos, playerFacing, state);
+                    return;
+                }
+
+                BreakFaceBlocks(world, player, pos, playerFacing, state);
             }
 
         });

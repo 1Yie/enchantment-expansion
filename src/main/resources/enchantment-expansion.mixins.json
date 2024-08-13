@@ -1,11 +1,12 @@
 {
-	"required": true,
-	"package": "moe.ingstar.ee.mixin",
-	"compatibilityLevel": "JAVA_21",
-	"mixins": [
-		"GetDamageToPlayer"
-	],
-	"injectors": {
-		"defaultRequire": 1
+  "required": true,
+  "package": "moe.ingstar.ee.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "GetDamageToPlayerMixin",
+    "PreventFatalDamageMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
 	}
 }
