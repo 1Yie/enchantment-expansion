@@ -2,5 +2,7 @@
   "enchantment.enchantment-expansion.leech": "吸血",
   "enchantment.enchantment-expansion.health_boost_armor": "生机勃勃",
   "enchantment.enchantment-expansion.area_destruction": "盾构",
-  "enchantment.enchantment-expansion.guardian_angel": "守护天使"
+  "enchantment.enchantment-expansion.guardian_angel": "守护天使",
+
+  "enchantment.enchantment-expansion.cooldown": "守护天使冷却：%s 秒"
 }
