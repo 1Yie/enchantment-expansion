@@ -1,5 +1,6 @@
 package moe.ingstar.ee.util.handler.enchantment;
 
+import moe.ingstar.ee.util.tool.EnchantmentParser;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttributes;

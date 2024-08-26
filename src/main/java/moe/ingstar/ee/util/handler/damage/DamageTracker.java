@@ -1,10 +1,10 @@
 package moe.ingstar.ee.util.handler.damage;
 
 public class DamageTracker {
-    private static float damage = 0.0F;
+    private static float damage;
 
-    public static void setDamage(float amount) {
-        damage = amount;
+    public static void setDamage(float damage) {
+        DamageTracker.damage = damage;
     }
 
     public static float getDamage() {

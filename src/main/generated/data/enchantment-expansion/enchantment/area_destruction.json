@@ -13,7 +13,7 @@
     "per_level_above_first": 5
   },
   "slots": [
-    "mainhand"
+    "hand"
   ],
   "supported_items": "#minecraft:enchantable/mining_loot",
   "weight": 5

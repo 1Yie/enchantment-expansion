@@ -1,4 +1,4 @@
-package moe.ingstar.ee.util.handler.enchantment;
+package moe.ingstar.ee.util.tool;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +22,6 @@ public class EnchantmentParser {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(enchantmentsString);
         if (matcher.find()) {
-            return Integer.parseInt(matcher.group(1));
         }
         return 0;
     }

@@ -1,11 +1,10 @@
 {
-  "anvil_cost": 8,
+  "anvil_cost": 6,
   "description": {
-    "translate": "enchantment.enchantment-expansion.leech"
+    "translate": "enchantment.enchantment-expansion.behead"
   },
-
   "max_cost": {
-    "base": 65,
+    "base": 35,
     "per_level_above_first": 20
   },
   "max_level": 3,
@@ -16,6 +15,6 @@
   "slots": [
     "mainhand"
   ],
-  "supported_items": "#minecraft:enchantable/sharp_weapon",
-  "weight": 8
+  "supported_items": "#minecraft:enchantable/weapon",
+  "weight": 10
 }

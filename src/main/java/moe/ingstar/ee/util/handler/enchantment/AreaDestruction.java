@@ -1,7 +1,9 @@
 package moe.ingstar.ee.util.handler.enchantment;
 
+import moe.ingstar.ee.util.tool.EnchantmentParser;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.BlockTags;
@@ -12,12 +14,7 @@ import net.minecraft.world.World;
 
 
 public class AreaDestruction {
-
-
-
     public static void load() {
-
-
         PlayerBlockBreakEvents.AFTER.register((world, player, pos, state, blockEntity) -> {
             String enchantmentsString = player.getMainHandStack().getEnchantments().toString();
             EnchantmentParser parser = new EnchantmentParser(enchantmentsString);
@@ -40,6 +37,8 @@ public class AreaDestruction {
                 }
 
                 BreakFaceBlocks(world, player, pos, playerFacing, state);
+
+
             }
 
         });
@@ -63,6 +62,8 @@ public class AreaDestruction {
 
                 BlockState targetState = world.getBlockState(targetPos);
                 breakBlockIfToolMatches(world, player, targetPos, targetState, state);
+
+                player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);
             }
         }
     }
@@ -84,6 +85,8 @@ public class AreaDestruction {
 
                 BlockState targetState = world.getBlockState(targetPos);
                 breakBlockIfToolMatches(world, player, targetPos, targetState, state);
+
+                player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);
             }
         }
     }

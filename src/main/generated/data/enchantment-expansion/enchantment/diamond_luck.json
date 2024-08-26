@@ -1,0 +1,20 @@
+{
+  "anvil_cost": 6,
+  "description": {
+    "translate": "enchantment.enchantment-expansion.diamond_luck"
+  },
+  "max_cost": {
+    "base": 45,
+    "per_level_above_first": 10
+  },
+  "max_level": 4,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 10
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#minecraft:pickaxes",
+  "weight": 8
+}

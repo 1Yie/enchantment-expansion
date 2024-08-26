@@ -1,0 +1,20 @@
+{
+  "anvil_cost": 8,
+  "description": {
+    "translate": "enchantment.enchantment-expansion.absolute_immunity"
+  },
+  "max_cost": {
+    "base": 35,
+    "per_level_above_first": 20
+  },
+  "max_level": 3,
+  "min_cost": {
+    "base": 15,
+    "per_level_above_first": 20
+  },
+  "slots": [
+    "armor"
+  ],
+  "supported_items": "#minecraft:chest_armor",
+  "weight": 10
+}

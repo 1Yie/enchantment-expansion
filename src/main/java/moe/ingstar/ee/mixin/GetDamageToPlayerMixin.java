@@ -1,7 +1,8 @@
 package moe.ingstar.ee.mixin;
 
-
+import moe.ingstar.ee.util.handler.enchantment.Backstabber;
 import moe.ingstar.ee.util.handler.damage.DamageTracker;
+import moe.ingstar.ee.util.handler.enchantment.Leech;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,9 +16,11 @@ public abstract class GetDamageToPlayerMixin {
 
     @Inject(method = "applyDamage", at = @At("TAIL"))
     public void applyDamage(DamageSource source, float amount, CallbackInfo ci) {
-        if (source.getAttacker() instanceof PlayerEntity) {
+        if (source.getAttacker() instanceof PlayerEntity player) {
             DamageTracker.setDamage(amount);
-        }
 
+            Backstabber.checkBackstabber(player, (LivingEntity) (Object) this, amount);
+            Leech.applyLeechEffect(player, (LivingEntity) (Object) this, amount);
+        }
     }
 }

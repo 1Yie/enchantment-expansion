@@ -1,8 +1,34 @@
 {
   "enchantment.enchantment-expansion.leech": "吸血",
-  "enchantment.enchantment-expansion.health_boost_armor": "生机勃勃",
-  "enchantment.enchantment-expansion.area_destruction": "盾构",
-  "enchantment.enchantment-expansion.guardian_angel": "守护天使",
+  "enchantment.enchantment-expansion.leech.desc": "根据攻击伤害恢复自身一定血量",
 
-  "enchantment.enchantment-expansion.cooldown": "守护天使冷却：%s 秒"
+  "enchantment.enchantment-expansion.health_boost_armor": "生机勃勃",
+  "enchantment.enchantment-expansion.health_boost_armor.desc": "给予穿戴者额外最大生命值",
+
+  "enchantment.enchantment-expansion.area_destruction": "盾构",
+  "enchantment.enchantment-expansion.area_destruction.desc": "挖掘方块后会同时挖掘相邻的方块",
+
+  "enchantment.enchantment-expansion.guardian_angel": "守护天使",
+  "enchantment.enchantment-expansion.guardian_angel.desc": "抵挡一次致命伤害",
+
+  "enchantment.enchantment-expansion.lightning" : "雷击",
+  "enchantment.enchantment-expansion.lightning.desc" : "攻击生物会基于附魔等级赋予生物同等数量的闪电效果",
+
+  "enchantment.enchantment-expansion:backstabber": "背刺",
+  "enchantment.enchantment-expansion:backstabber.desc": "生物处于背面时攻击提升",
+
+  "enchantment.enchantment-expansion.absolute_immunity": "绝对免疫",
+  "enchantment.enchantment-expansion.absolute_immunity.desc": "10% 抵抗所有伤害（冷却时间：30 秒）",
+
+  "enchantment.enchantment-expansion.behead": "斩杀",
+  "enchantment.enchantment-expansion.behead.desc": "当生物血量低于一定程度时，会被斩杀",
+
+  "enchantment.enchantment-expansion.diamond_luck": "钻石无处不在",
+  "enchantment.enchantment-expansion.diamond_luck.desc": "挖掘部分矿物概率掉落钻石",
+
+  "enchantment.enchantment-expansion.kiss_of_death": "死神之吻",
+  "enchantment.enchantment-expansion.kiss_of_death.desc": "击杀生物后，对附近同类型生物附加负面效果",
+
+  "enchantment.enchantment-expansion.cooldown.guardian_angel": "守护天使冷却：%s 秒",
+  "enchantment.enchantment-expansion.cooldown.absolute_immunity": "绝对免疫冷却：%s 秒"
 }
