@@ -38,3 +38,4 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+/src/main/generated/.cache/80805caefa701ccda6d42afd3d99cb16fe35a974

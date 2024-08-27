@@ -3,15 +3,15 @@
 	"id": "enchantment-expansion",
 	"version": "${version}",
 	"name": "Enchantment Expansion",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Add more enchantments to Minecraft.",
 	"authors": [
-		"Me!"
+		"ichiyo"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/1Yie/more-enchantments",
+		"sources": "https://github.com/1Yie/more-enchantments"
 	},
-	"license": "CC0-1.0",
+	"license": "GPL-3.0",
 	"icon": "assets/enchantment-expansion/icon.png",
 	"environment": "*",
 	"entrypoints": {
