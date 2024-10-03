@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.util.concurrent.CompletableFuture;
 
 public class AreaDestruction {
     public static void load() {
@@ -21,76 +22,38 @@ public class AreaDestruction {
             Direction playerFacing = player.getHorizontalFacing();
 
             if (parser.hasEnchantment("enchantment-expansion:area_destruction")) {
-                if (player.getPitch() >= -90 && player.getPitch() < -40) {
-                    BreakTopOrDownBlocks(world, player, pos, playerFacing, state);
-                    return;
-                }
-
-                if (player.getPitch() > 20) {
-                    BreakTopOrDownBlocks(world, player, pos, playerFacing, state);
-                    return;
-                }
-
-                if (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH || playerFacing == Direction.WEST || playerFacing == Direction.EAST) {
-                    BreakFaceBlocks(world, player, pos, playerFacing, state);
-                    return;
-                }
-
-                BreakFaceBlocks(world, player, pos, playerFacing, state);
-
-
+                breakBlocks(world, player, pos, playerFacing, state, (player.getPitch() >= -90 && player.getPitch() < -40) || player.getPitch() > 20);
             }
-
         });
     }
 
+    private static void breakBlocks(World world, PlayerEntity player, BlockPos pos, Direction playerFacing, BlockState state, boolean isTopOrDown) {
+        CompletableFuture.runAsync(() -> {
+            int x = pos.getX();
+            int y = pos.getY();
+            int z = pos.getZ();
 
-    private static void BreakFaceBlocks(World world, PlayerEntity player, BlockPos pos, Direction playerFacing, BlockState state) {
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
+            for (int i = -1; i <= 1; i++) {
+                for (int j = -1; j <= 1; j++) {
+                    BlockPos targetPos;
+                    if (isTopOrDown) {
+                        targetPos = (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH)
+                                ? new BlockPos(x + i, y, z + j)
+                                : new BlockPos(x + j, y, z + i);
+                    } else {
+                        targetPos = (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH)
+                                ? new BlockPos(x + i, y + j, z)
+                                : new BlockPos(x, y + j, z + i);
+                    }
 
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                BlockPos targetPos;
+                    BlockState targetState = world.getBlockState(targetPos);
+                    breakBlockIfToolMatches(world, player, targetPos, targetState, state);
 
-                if (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH) {
-                    targetPos = new BlockPos(x + i, y + j, z);
-                } else {
-                    targetPos = new BlockPos(x, y + j, z + i);
                 }
-
-                BlockState targetState = world.getBlockState(targetPos);
-                breakBlockIfToolMatches(world, player, targetPos, targetState, state);
-
-                player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);
             }
-        }
+            player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);
+        });
     }
-
-    private static void BreakTopOrDownBlocks(World world, PlayerEntity player, BlockPos pos, Direction playerFacing, BlockState state) {
-        int x = pos.getX();
-        int y = pos.getY();
-        int z = pos.getZ();
-
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                BlockPos targetPos;
-
-                if (playerFacing == Direction.NORTH || playerFacing == Direction.SOUTH) {
-                    targetPos = new BlockPos(x + i, y, z + j);
-                } else {
-                    targetPos = new BlockPos(x + j, y, z + i);
-                }
-
-                BlockState targetState = world.getBlockState(targetPos);
-                breakBlockIfToolMatches(world, player, targetPos, targetState, state);
-
-                player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);
-            }
-        }
-    }
-
 
     private static void breakBlockIfToolMatches(World world, PlayerEntity player, BlockPos targetPos, BlockState targetState, BlockState state) {
         ItemStack tool = player.getMainHandStack();
@@ -104,41 +67,13 @@ public class AreaDestruction {
         float targetHardness = targetState.getHardness(world, targetPos);
         float blockHardness = state.getHardness(world, targetPos);
 
-        if (targetHardness <= blockHardness) {
-            if (isAxe) {
-                if (state.isIn(BlockTags.AXE_MINEABLE) && targetState.isIn(BlockTags.AXE_MINEABLE) ||
-                        state.isIn(BlockTags.LEAVES) && targetState.isIn(BlockTags.LEAVES)) {
-                    world.breakBlock(targetPos, true, player);
-                    return;
-                }
-            }
-
-            if (isPickaxe) {
-                if (state.isIn(BlockTags.PICKAXE_MINEABLE) && targetState.isIn(BlockTags.PICKAXE_MINEABLE)) {
-                    world.breakBlock(targetPos, true, player);
-                    return;
-                }
-            }
-
-            if (isHoe) {
-                if (state.isIn(BlockTags.HOE_MINEABLE) && targetState.isIn(BlockTags.HOE_MINEABLE)) {
-                    world.breakBlock(targetPos, true, player);
-                    return;
-                }
-            }
-
-            if (isSword) {
-                if (state.isIn(BlockTags.SWORD_EFFICIENT) && targetState.isIn(BlockTags.SWORD_EFFICIENT)) {
-                    world.breakBlock(targetPos, true, player);
-                    return;
-                }
-            }
-
-            if (isShovel) {
-                if (state.isIn(BlockTags.SHOVEL_MINEABLE) && targetState.isIn(BlockTags.SHOVEL_MINEABLE)) {
-                    world.breakBlock(targetPos, true, player);
-
-                }
+        if (targetHardness <= blockHardness && !player.isCreative()) {
+            if ((isAxe && (state.isIn(BlockTags.AXE_MINEABLE) || targetState.isIn(BlockTags.AXE_MINEABLE))) ||
+                    (isPickaxe && (state.isIn(BlockTags.PICKAXE_MINEABLE) || targetState.isIn(BlockTags.PICKAXE_MINEABLE))) ||
+                    (isHoe && (state.isIn(BlockTags.HOE_MINEABLE) || targetState.isIn(BlockTags.HOE_MINEABLE))) ||
+                    (isSword && (state.isIn(BlockTags.SWORD_EFFICIENT) || targetState.isIn(BlockTags.SWORD_EFFICIENT))) ||
+                    (isShovel && (state.isIn(BlockTags.SHOVEL_MINEABLE) || targetState.isIn(BlockTags.SHOVEL_MINEABLE)))) {
+                world.breakBlock(targetPos, true, player);
             }
         }
     }
