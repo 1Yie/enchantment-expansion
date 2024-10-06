@@ -34,9 +34,7 @@ public class CooldownManager {
     }
 
     private void safeTickCooldowns(Consumer<PlayerEntity> onCooldownEnd) {
-        Iterator<Map.Entry<PlayerEntity, Map<String, Integer>>> playerIterator = playerCooldownMap.entrySet().iterator();
-        while (playerIterator.hasNext()) {
-            Map.Entry<PlayerEntity, Map<String, Integer>> playerEntry = playerIterator.next();
+        for (Map.Entry<PlayerEntity, Map<String, Integer>> playerEntry : playerCooldownMap.entrySet()) {
             PlayerEntity player = playerEntry.getKey();
             Map<String, Integer> cooldownMap = playerEntry.getValue();
 

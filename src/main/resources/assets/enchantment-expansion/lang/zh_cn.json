@@ -29,6 +29,10 @@
   "enchantment.enchantment-expansion.kiss_of_death": "死神之吻",
   "enchantment.enchantment-expansion.kiss_of_death.desc": "击杀生物后，对附近同类型生物附加负面效果",
 
+  "enchantment.enchantment-expansion.death_backtrack": "死亡回溯",
+  "enchantment.enchantment-expansion.death_backtrack.desc": "玩家收到致命伤害回溯到10秒前的位置，继承当时状态",
+
   "enchantment.enchantment-expansion.cooldown.guardian_angel": "守护天使冷却：%s 秒",
-  "enchantment.enchantment-expansion.cooldown.absolute_immunity": "绝对免疫冷却：%s 秒"
+  "enchantment.enchantment-expansion.cooldown.absolute_immunity": "绝对免疫冷却：%s 秒",
+  "enchantment.enchantment-expansion.cooldown.death_backtrack": "死亡回溯冷却：%s 秒"
 }

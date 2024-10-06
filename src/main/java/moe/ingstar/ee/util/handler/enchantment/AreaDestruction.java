@@ -48,7 +48,6 @@ public class AreaDestruction {
 
                     BlockState targetState = world.getBlockState(targetPos);
                     breakBlockIfToolMatches(world, player, targetPos, targetState, state);
-
                 }
             }
             player.getMainHandStack().damage(1, player, EquipmentSlot.MAINHAND);

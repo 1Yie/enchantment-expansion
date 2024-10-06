@@ -6,6 +6,7 @@ public class HandlerRegister {
     public static void register() {
         HealthBoostArmor.load();
         AreaDestruction.load();
+        DeathBacktrack.load();
 
         GuardianAngel.init();
 

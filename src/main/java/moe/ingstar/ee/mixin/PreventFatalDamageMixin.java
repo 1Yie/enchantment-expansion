@@ -30,11 +30,10 @@ public class PreventFatalDamageMixin {
 
                     if (parser.hasEnchantment(EnchantmentExpansion.MOD_ID + ":" + "guardian_angel")) {
                         GuardianAngel.handleDamage(entity, source, amount, cir);
-                        return;
                     }
 
                     if (parser.hasEnchantment(EnchantmentExpansion.MOD_ID + ":" + "fatal_damage")) {
-                        return;
+
                     }
                 }
             }

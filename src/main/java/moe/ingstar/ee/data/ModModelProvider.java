@@ -16,7 +16,6 @@ import java.util.function.BiConsumer;
 
 public class ModModelProvider extends FabricCodecDataProvider {
 
-
     protected ModModelProvider(FabricDataOutput dataOutput, CompletableFuture registriesFuture, DataOutput.OutputType outputType, String directoryName, Codec codec) {
         super(dataOutput, registriesFuture, outputType, directoryName, codec);
     }

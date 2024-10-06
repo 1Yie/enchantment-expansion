@@ -152,6 +152,18 @@ public class ModEnchantmentGenerator extends FabricDynamicRegistryProvider {
                         AttributeModifierSlot.ARMOR
                 )
         ));
+
+        register(entries, EnchantmentInit.DEATH_BACKTRACK, Enchantment.builder(
+                Enchantment.definition(
+                        itemLookup.getOrThrow(ItemTags.CHEST_ARMOR),
+                        10,
+                        1,
+                        Enchantment.leveledCost(15, 20),
+                        Enchantment.leveledCost(35, 20),
+                        8,
+                        AttributeModifierSlot.ARMOR
+                )
+        ));
     }
 
     private static void register(Entries entries, RegistryKey<Enchantment> key, Enchantment.Builder builder, ResourceCondition... conditions) {

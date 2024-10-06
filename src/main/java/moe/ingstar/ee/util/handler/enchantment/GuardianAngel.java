@@ -1,21 +1,31 @@
 package moe.ingstar.ee.util.handler.enchantment;
 
+import io.netty.buffer.Unpooled;
+import moe.ingstar.ee.EnchantmentExpansion;
 import moe.ingstar.ee.util.tool.CooldownManager;
+import moe.ingstar.ee.util.tool.CooldownPayload;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class GuardianAngel {
     private static final String COOLDOWN_ID = "GuardianAngelCooldown";
     private static CooldownManager cooldownManager;
+
+    public static final Identifier COOLDOWN_PACKET_ID = Identifier.of(EnchantmentExpansion.MOD_ID, "cooldown_packet");
+
 
     public static void init() {
         cooldownManager = new CooldownManager();
@@ -37,6 +47,18 @@ public class GuardianAngel {
 
     public static int getCooldown(PlayerEntity player) {
         return cooldownManager.getCooldown(player, COOLDOWN_ID);
+    }
+
+
+
+    public static int sendCooldownToClient(ServerPlayerEntity player) {
+        CooldownPayload payload = new CooldownPayload(getCooldown(player));
+
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        payload.write(buf);
+
+        ServerPlayNetworking.send(player, payload);
+        return 0;
     }
 
     public static void handleDamage(LivingEntity entity, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {

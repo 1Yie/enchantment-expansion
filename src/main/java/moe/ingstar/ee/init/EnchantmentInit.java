@@ -22,6 +22,7 @@ public class EnchantmentInit {
     public static final RegistryKey<Enchantment> BEHEAD = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(EnchantmentExpansion.MOD_ID, "behead"));
     public static final RegistryKey<Enchantment> KISS_OF_DEATH = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(EnchantmentExpansion.MOD_ID, "kiss_of_death"));
     public static final RegistryKey<Enchantment> ABSOLUTE_IMMUNITY = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(EnchantmentExpansion.MOD_ID, "absolute_immunity"));
+    public static final RegistryKey<Enchantment> DEATH_BACKTRACK = RegistryKey.of(RegistryKeys.ENCHANTMENT, Identifier.of(EnchantmentExpansion.MOD_ID, "death_backtrack"));
 
     // demo
     public static final MapCodec<LightningEnchantmentEffect> LIGHTNING_ENCHANTMENT_EFFECT = register("lightning", LightningEnchantmentEffect.CODEC);

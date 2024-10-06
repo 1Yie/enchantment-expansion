@@ -57,7 +57,6 @@ public class KissOfDeath {
         return null;
     }
 
-
     private static void applyRandomDebuff(LivingEntity livingEntity, StatusEffect debuff) {
         if (debuff != null) {
             int duration = getEffectDuration(debuff);
