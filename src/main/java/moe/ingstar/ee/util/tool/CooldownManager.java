@@ -1,5 +1,6 @@
 package moe.ingstar.ee.util.tool;
 
+import moe.ingstar.ee.config.cooldown.CooldownConfigManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
@@ -120,5 +121,11 @@ public class CooldownManager {
 
     private boolean isPersistentDataProvider(PlayerEntity player) {
         return player instanceof PersistentDataProvider;
+    }
+
+    public void registerCooldowns(CooldownConfigManager configManager) {
+        registerCooldown("DeathBacktrackCooldown", configManager.getCooldownConfig().getDeathBacktrackCooldown());
+        registerCooldown("GuardianAngelCooldown", configManager.getCooldownConfig().getGuardianAngelCooldown());
+        registerCooldown("AbsoluteImmunityCooldown", configManager.getCooldownConfig().getAbsoluteImmunityCooldown());
     }
 }

@@ -1,6 +1,6 @@
 package moe.ingstar.ee.util.handler.enchantment;
 
-import moe.ingstar.ee.EnchantmentExpansion;
+import moe.ingstar.ee.config.cooldown.CooldownConfigManager;
 import moe.ingstar.ee.util.tool.CooldownManager;
 import moe.ingstar.ee.util.tool.EnchantmentParser;
 import moe.ingstar.ee.util.tool.PlayerState;
@@ -18,7 +18,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -37,7 +36,7 @@ public class DeathBacktrack {
 
     public static void init() {
         cooldownManager = new CooldownManager();
-        cooldownManager.registerCooldown(COOLDOWN_ID, 20 * 60);
+        cooldownManager.registerCooldown(COOLDOWN_ID, CooldownConfigManager.getCooldownConfig().getDeathBacktrackCooldown());
 
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             cooldownManager.tickCooldowns(player -> {

@@ -1,5 +1,7 @@
 package moe.ingstar.ee.util.handler.enchantment;
 
+import moe.ingstar.ee.config.cooldown.CooldownConfigManager;
+import moe.ingstar.ee.config.probability.ProbabilityConfigManager;
 import moe.ingstar.ee.util.tool.EnchantmentParser;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -44,7 +46,7 @@ public class AbsoluteImmunity {
         if (cooldownMap.containsKey(player)) {
             long lastTriggerTime = cooldownMap.get(player);
             long currentTime = player.getWorld().getTime();
-            long totalCooldown = 20 * 15; // 15秒冷却
+            long totalCooldown = CooldownConfigManager.getCooldownConfig().getAbsoluteImmunityCooldown();// 15秒冷却
             long elapsedTime = currentTime - lastTriggerTime;
 
             if (elapsedTime < totalCooldown) {
@@ -57,6 +59,7 @@ public class AbsoluteImmunity {
     private static boolean shouldImmune(PlayerEntity player) {
         Random random = new Random();
         boolean hasEnchantment = false;
+
 
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             if (slot == EquipmentSlot.HEAD || slot == EquipmentSlot.CHEST || slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET) {
@@ -85,7 +88,7 @@ public class AbsoluteImmunity {
             }
         }
 
-        if (random.nextDouble() < 0.10) {
+        if (random.nextDouble() < ProbabilityConfigManager.getProbabilityConfig().getAbsoluteImmunityProbability()) {
             player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_SHIELD_BLOCK, SoundCategory.PLAYERS, 1.0f, 1.0f);
             cooldownMap.put(player, player.getWorld().getTime());
             return true;

@@ -2,9 +2,6 @@ package moe.ingstar.ee;
 
 import moe.ingstar.ee.init.EnchantmentInit;
 import moe.ingstar.ee.register.HandlerRegister;
-import moe.ingstar.ee.util.handler.enchantment.Backstabber;
-import moe.ingstar.ee.util.handler.enchantment.DiamondLuck;
-import moe.ingstar.ee.util.handler.enchantment.GuardianAngel;
 import net.fabricmc.api.ModInitializer;
 
 
