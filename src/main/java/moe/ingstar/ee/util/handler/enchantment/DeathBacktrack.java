@@ -1,10 +1,14 @@
 package moe.ingstar.ee.util.handler.enchantment;
 
+import moe.ingstar.ee.EnchantmentExpansion;
+import moe.ingstar.ee.util.tool.CooldownManager;
 import moe.ingstar.ee.util.tool.EnchantmentParser;
 import moe.ingstar.ee.util.tool.PlayerState;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,8 +18,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,27 +29,53 @@ import java.util.Map;
 import java.util.Queue;
 
 public class DeathBacktrack {
+    private static final String COOLDOWN_ID = "DeathBacktrackCooldown";
     private static final int RECORD_INTERVAL_TICKS = 20;
     private static final int RECORD_DURATION_TICKS = 20 * 100;
-    private static final int COOLDOWN_TICKS = 20 * 60;
+    private static CooldownManager cooldownManager;
     private static final Map<PlayerEntity, Queue<PlayerState>> playerStateMap = new HashMap<>();
-    private static final Map<PlayerEntity, Integer> cooldownMap = new HashMap<>();
 
-    public static void load() {
+    public static void init() {
+        cooldownManager = new CooldownManager();
+        cooldownManager.registerCooldown(COOLDOWN_ID, 20 * 60);
+
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            cooldownManager.tickCooldowns(player -> {
+                sendCooldownToClient((ServerPlayerEntity) player);
+            });
+        });
+
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (PlayerEntity player : server.getPlayerManager().getPlayerList()) {
                 checkAndRecordPlayerState(player);
             }
         });
 
-        ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> {
-            if (entity instanceof PlayerEntity player && playerHasBacktrackEnchant(player)) {
-                if (shouldBacktrack(player, amount)) {
-                    return !performBacktrack(player);
+        registerPlayerEvents();
+    }
+
+    public static boolean isOnCooldown(PlayerEntity player) {
+        return cooldownManager.isOnCooldown(player, COOLDOWN_ID);
+    }
+
+    public static void startCooldown(PlayerEntity player) {
+        cooldownManager.startCooldown(player, COOLDOWN_ID);
+    }
+
+    public static int getCooldown(PlayerEntity player) {
+        return cooldownManager.getCooldown(player, COOLDOWN_ID);
+    }
+
+    public static void handleDamage(LivingEntity entity, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (entity instanceof PlayerEntity player) {
+            if (player.getHealth() <= amount && !isOnCooldown(player)) {
+                recordPlayerState(player);
+                if (performBacktrack(player)) {
+                    startCooldown(player);
+                    cir.setReturnValue(false);
                 }
             }
-            return true;
-        });
+        }
     }
 
     private static void checkAndRecordPlayerState(PlayerEntity player) {
@@ -55,10 +87,8 @@ public class DeathBacktrack {
         }
     }
 
-    private static boolean playerHasBacktrackEnchant(PlayerEntity player) {
-        ItemStack chestplate = player.getInventory().getArmorStack(EquipmentSlot.CHEST.getEntitySlotId());
-        return chestplate.hasEnchantments() && new EnchantmentParser(chestplate.getEnchantments().toString())
-                .hasEnchantment("enchantment-expansion:death_backtrack");
+    private static void updateCooldown(PlayerEntity player) {
+        cooldownManager.updateCooldown(player, COOLDOWN_ID);
     }
 
     private static void recordPlayerState(PlayerEntity player) {
@@ -69,38 +99,33 @@ public class DeathBacktrack {
         }
     }
 
-    private static void updateCooldown(PlayerEntity player) {
-        cooldownMap.computeIfPresent(player, (p, ticks) -> ticks > 0 ? ticks - 1 : 0);
-    }
-
-    private static boolean shouldBacktrack(PlayerEntity player, float damageAmount) {
-        return player.getHealth() - damageAmount <= 0 && !isInCooldown(player);
-    }
-
     private static boolean performBacktrack(PlayerEntity player) {
         Queue<PlayerState> states = playerStateMap.get(player);
+
+        World world = player.getWorld();
+        BlockPos pos = player.getBlockPos();
+
         if (states != null && !states.isEmpty()) {
             PlayerState state = states.poll();
             if (state != null) {
                 state.restore((ServerPlayerEntity) player);
                 addBacktrackEffects(player);
-                setCooldown(player, COOLDOWN_TICKS);
+                spawnParticles((ServerWorld) world, pos);
                 return true;
             }
         }
         return false;
     }
 
-    private static void setCooldown(PlayerEntity player, int ticks) {
-        cooldownMap.put(player, ticks);
+    private static void registerPlayerEvents() {
+        ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
+            cooldownManager.saveState(oldPlayer, COOLDOWN_ID);
+            cooldownManager.loadState(newPlayer);
+        });
     }
 
-    private static boolean isInCooldown(PlayerEntity player) {
-        return cooldownMap.getOrDefault(player, 0) > 0;
-    }
-
-    public static int getCooldown(PlayerEntity player) {
-        return cooldownMap.getOrDefault(player, 0);
+    private static void sendCooldownToClient(ServerPlayerEntity player) {
+        int cooldown = getCooldown(player);
     }
 
     private static void addBacktrackEffects(PlayerEntity player) {

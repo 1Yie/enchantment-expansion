@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class CooldownManager {
@@ -17,7 +18,7 @@ public class CooldownManager {
     }
 
     public boolean isOnCooldown(PlayerEntity player, String id) {
-        return playerCooldownMap.containsKey(player) && playerCooldownMap.get(player).getOrDefault(id, 0) > 0;
+        return playerCooldownMap.getOrDefault(player, new HashMap<>()).getOrDefault(id, 0) > 0;
     }
 
     public void startCooldown(PlayerEntity player, String id) {
@@ -26,8 +27,23 @@ public class CooldownManager {
     }
 
     public int getCooldown(PlayerEntity player, String id) {
-        return playerCooldownMap.getOrDefault(player, new HashMap<>()).getOrDefault(id, 0);
+        return Optional.ofNullable(playerCooldownMap.get(player))
+                .map(cooldownMap -> cooldownMap.getOrDefault(id, 0))
+                .orElse(0);
     }
+
+    public void updateCooldown(PlayerEntity player, String id) {
+        Map<String, Integer> cooldownMap = playerCooldownMap.get(player);
+        if (cooldownMap != null && cooldownMap.containsKey(id)) {
+            int currentCooldown = cooldownMap.get(id);
+            if (currentCooldown > 0) {
+                cooldownMap.put(id, currentCooldown - 1);
+            } else {
+                cooldownMap.remove(id);
+            }
+        }
+    }
+
 
     public void tickCooldowns(Consumer<PlayerEntity> onCooldownEnd) {
         safeTickCooldowns(onCooldownEnd);
@@ -58,7 +74,7 @@ public class CooldownManager {
     }
 
     public void saveState(PlayerEntity player, String specificId) {
-        if (player instanceof PersistentDataProvider) {
+        if (isPersistentDataProvider(player)) {
             NbtCompound nbt = ((PersistentDataProvider) player).enchantment_expansion_1_21$getPersistentData();
             Map<String, Integer> cooldownMap = playerCooldownMap.get(player);
 
@@ -86,7 +102,7 @@ public class CooldownManager {
     }
 
     public void loadState(PlayerEntity player) {
-        if (player instanceof PersistentDataProvider) {
+        if (isPersistentDataProvider(player)) {
             NbtCompound nbt = ((PersistentDataProvider) player).enchantment_expansion_1_21$getPersistentData();
             Map<String, Integer> cooldownMap = new HashMap<>();
 
@@ -100,5 +116,9 @@ public class CooldownManager {
                 playerCooldownMap.put(player, cooldownMap);
             }
         }
+    }
+
+    private boolean isPersistentDataProvider(PlayerEntity player) {
+        return player instanceof PersistentDataProvider;
     }
 }

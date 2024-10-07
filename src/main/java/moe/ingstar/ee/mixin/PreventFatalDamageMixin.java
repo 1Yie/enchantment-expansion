@@ -1,6 +1,7 @@
 package moe.ingstar.ee.mixin;
 
 import moe.ingstar.ee.EnchantmentExpansion;
+import moe.ingstar.ee.util.handler.enchantment.DeathBacktrack;
 import moe.ingstar.ee.util.handler.enchantment.GuardianAngel;
 import moe.ingstar.ee.util.tool.EnchantmentParser;
 import net.minecraft.entity.EquipmentSlot;
@@ -32,8 +33,8 @@ public class PreventFatalDamageMixin {
                         GuardianAngel.handleDamage(entity, source, amount, cir);
                     }
 
-                    if (parser.hasEnchantment(EnchantmentExpansion.MOD_ID + ":" + "fatal_damage")) {
-
+                    if (parser.hasEnchantment(EnchantmentExpansion.MOD_ID + ":" + "death_backtrack")) {
+                       DeathBacktrack.handleDamage(entity, source, amount, cir);
                     }
                 }
             }
